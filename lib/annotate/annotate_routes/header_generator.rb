@@ -16,7 +16,8 @@ module AnnotateRoutes
       private
 
       def routes_map(options)
-        result = `rake routes`.chomp("\n").split(/\n/, -1)
+        use_rake = Gem::Version.new(Rails::VERSION::STRING) < Gem::Version.new('6.0.0.rc1')
+        result = (use_rake ? `rake routes` : `rails routes`).chomp("\n").split(/\n/, -1)
 
         # In old versions of Rake, the first line of output was the cwd.  Not so
         # much in newer ones.  We ditch that line if it exists, and if not, we
